@@ -1,0 +1,46 @@
+FROM python:3.9-slim
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Create a group and user to run our app
+ARG APP_USER=todo
+RUN groupadd -r ${APP_USER} && useradd --no-log-init -r -g ${APP_USER} ${APP_USER}
+
+# Install packages needed to run your application (not build deps):
+#   mime-support -- for mime types when serving static files
+#   postgresql-client -- for running database commands
+# We need to recreate the /usr/share/man/man{1..8} directories first because
+# they were clobbered by a parent image.
+RUN set -ex \
+    && RUN_DEPS=" \
+    libpcre3 \
+    mime-support \
+    postgresql-client \
+    " \
+    && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends $RUN_DEPS \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy your application code to the container (make sure you create a .dockerignore file if any large files or directories should be excluded)
+ENV APP_HOME=/app/
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+# ADD . $APP_HOME
+
+COPY ./Pipfile ./Pipfile
+COPY ./Pipfile.lock ./Pipfile.lock
+RUN pip install pipenv
+RUN pipenv install --dev
+
+# Add any static environment variables needed by Django or your settings file here:
+ENV DJANGO_SETTINGS_MODULE=project.local
+
+# Uncomment after creating your docker-entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Expose HTTP Endpoint
+EXPOSE 80
+
+CMD ["runserver"]
