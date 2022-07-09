@@ -1,0 +1,55 @@
+environments:
+  default:
+    values:
+    - values.yaml
+
+# Repositories
+repositories:
+- name: ingress-nginx
+  url: "https://kubernetes.github.io/ingress-nginx"
+# - name: bitnami
+#   url: "https://charts.bitnami.com/bitnami"
+
+# Releases
+releases:
+
+# - name: cert-manager
+#   namespace: kube-system
+#   labels:
+#     tier: controller
+#     version: 1.5.3
+#   <<: *custom
+#   wait: true
+
+- name: ingress-nginx
+  namespace: kube-system
+  labels:
+    tier: ingress
+  chart: ingress-nginx/ingress-nginx
+  version: 4.1.4
+  values:
+    - charts/{{`{{ .Release.Name }}`}}/values.yaml.gotmpl
+  # needs:
+  #   - kube-system/cert-manager
+
+# - name: postgresql
+#   namespace: database
+#   labels:
+#     tier: database
+#   chart: bitnami/postgresql
+#   version: 14.4.0
+#   values:
+#     - charts/{{`{{ .Release.Name }}`}}/values.yaml.gotmpl
+
+- name: application
+  namespace: django
+  labels:
+    tier: application
+  chart: ./charts/{{`{{ .Release.Name }}`}}
+  missingFileHandler: Warn
+  version: 1.0.0
+  values:
+    - charts/{{`{{ .Release.Name }}`}}/values.yaml.gotmpl
+  needs:
+    - kube-system/ingress-nginx
+    # - database/postgresql

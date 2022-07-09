@@ -1,0 +1,47 @@
+project: django
+
+ingress:
+  name: ingress-nginx
+  namespace: django
+  className: nginx
+
+database:
+  name: django
+  username: bukL7EukgGA
+  password: Z6rJKisQmAf
+
+application:
+  host: django.localhost
+  name: django
+  replicas: 2
+  maxreplicas: 3
+  containerPort: 80
+  servicePort: 80
+  serviceType: ClusterIP
+  requests_memory: 200Mi
+  requests_cpu: 400m
+  limit_memory: 400Mi
+  limit_cpu: 800m
+  livenessProbe_initialDelaySeconds: 5
+  livenessProbe_periodSeconds: 30
+  readinessProbe_initialDelaySeconds: 5
+  readinessProbe_periodSeconds: 30
+  terminationGracePeriodSeconds: 30
+  health_check_url: /
+  config_map_values:
+    DJANGO_MANAGEPY_MAKEMIGRATION: "\"1\""
+    DJANGO_MANAGEPY_MIGRATE: "\"1\""
+    DJANGO_MANAGEPY_COLLECTSTATIC: "\"1\""
+  
+    DEBUG: "\"off\""
+
+    DATABASE_ENGINE: django.db.backends.postgresql
+    DATABASE_HOST: postgres
+    DATABASE_PORT: "\"5432\""
+    DATABASE_NAME: db
+
+  secret_values:
+    SECRET_KEY: "4&yf5g+pd3d=8(5ot!+c)00n_gsma^6&xnxdwb#7-w+p%w863^"
+
+    DATABASE_USERNAME: bukL7EukgGA
+    DATABASE_PASSWORD: Z6rJKisQmAf

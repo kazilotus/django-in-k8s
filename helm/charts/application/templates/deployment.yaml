@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ .Values.application.name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      module: {{ .Values.application.name }}
+      app: {{ .Values.application.name }}
+  template:
+    metadata:
+      labels:
+        module: {{ .Values.application.name }}
+        app: {{ .Values.application.name }}
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              module: {{ .Values.application.name }}
+      containers:
+      - name: {{ .Values.application.name }}
+        image: nginx
+        ports:
+          - containerPort: {{ .Values.application.containerPort }}
+        resources:
+          requests:
+            memory: {{ .Values.application.requests_memory }}
+            cpu: {{ .Values.application.requests_cpu }}
+          limits:
+            memory: {{ .Values.application.limit_memory }}
+            cpu: {{ .Values.application.limit_cpu }}
+        livenessProbe:
+          httpGet:
+            port: {{ .Values.application.containerPort }}
+            path: {{ .Values.application.health_check_url  }}
+#          timeoutSeconds: 5
+          initialDelaySeconds: {{ .Values.application.livenessProbe_initialDelaySeconds }}
+          periodSeconds: {{ .Values.application.livenessProbe_periodSeconds }}
+        readinessProbe:
+          httpGet:
+            port: {{ .Values.application.containerPort }}
+            path: {{ .Values.application.health_check_url  }}
+#          timeoutSeconds: 5
+          initialDelaySeconds: {{ .Values.application.readinessProbe_initialDelaySeconds }}
+          periodSeconds: {{ .Values.application.readinessProbe_periodSeconds }}
+        imagePullPolicy: Always
+        # envFrom:
+        # - configMapRef:
+        #     name: {{ .name }}-env-configmap
+        # - secretRef:
+        #     name: {{ .name }}-env-secrets
+      terminationGracePeriodSeconds: {{ .Values.application.terminationGracePeriodSeconds }}

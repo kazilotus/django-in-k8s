@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.application.name }}-env-configmap
+  namespace: {{ $.Release.Namespace }}
+data:
+{{ toYaml .Values.application.config_map_values | indent 2 }}

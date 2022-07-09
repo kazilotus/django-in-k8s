@@ -1,0 +1,34 @@
+project: {{ .Values | get "project" "project" }}
+
+ingress:
+  name: {{ .Values | get "ingress.name" "ingress" }}
+  namespace: {{ .Values | get "ingress.namespace" "default" }}
+  className: {{ .Values | get "ingress.className" "default" }}
+
+application:
+  host: {{ .Values | get "application.host" "localhost" }}
+  name: {{ .Values | get "application.name" "localhost" }}
+  replicas: {{ .Values | get "application.replicas" "2" }}
+  maxreplicas: {{ .Values | get "application.maxreplicas" "2" }}
+  containerPort: {{ .Values | get "application.containerPort" "80" }}
+  servicePort: {{ .Values | get "application.servicePort" "80" }}
+  serviceType: {{ .Values | get "application.serviceType" "ClusterIP" }}
+  requests_memory: {{ .Values | get "application.requests_memory" "100" }}
+  requests_cpu: {{ .Values | get "application.requests_cpu" "100" }}
+  limit_memory: {{ .Values | get "application.limit_memory" "200" }}
+  limit_cpu: {{ .Values | get "application.limit_cpu" "200" }}
+  livenessProbe_initialDelaySeconds: {{ .Values | get "application.livenessProbe_initialDelaySeconds" "5" }}
+  livenessProbe_periodSeconds: {{ .Values | get "application.livenessProbe_periodSeconds" "10" }}
+  readinessProbe_initialDelaySeconds: {{ .Values | get "application.readinessProbe_initialDelaySeconds" "5" }}
+  readinessProbe_periodSeconds: {{ .Values | get "application.readinessProbe_periodSeconds" "10" }}
+  terminationGracePeriodSeconds: {{ .Values | get "application.terminationGracePeriodSeconds" "10" }}
+  health_check_url: {{ .Values | get "application.health_check_url" "/" }}
+  config_map_values:
+    {{- range $cmk, $cmv := .Values.application.config_map_values }}
+    {{ $cmk }}: {{ $cmv }}
+    {{- end }}
+  secret_values:
+    {{- range $sk, $sv := .Values.application.secret_values }}
+    {{ $sk }}: {{ $sv | b64enc }}
+    {{- end }}
+  

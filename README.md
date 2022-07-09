@@ -5,11 +5,18 @@ This project demonstrates using docker and helm to deploy a django application t
 The django project being used is https://github.com/shacker/gtd which is a full implemtation of https://github.com/shacker/django-todo application.
 
 Tools used in this project
-- docker
+- docker - container engine
 - helm - package k8s resources
+- helmfile - install multiple charts at once
 - podman - to install minikube in M1 Apple Chip Macbook
 - minikube - setup a basic k8s cluster
+- ansible - build and deploy helm chart to k8s cluster
 - kubernetes
+
+# Start the project in development mode
+```bash
+sudo docker-compose up --build -d
+```
 
 # Setup and connect to k8s cluster
 ```bash
@@ -17,7 +24,7 @@ Tools used in this project
 brew install minikube
 minikube start --kubernetes-version=v1.24.1
 
-# If you face problem using minikube on a M1 Apple Chip try using podman
+# If you face problem using minikube on an M1 Apple Chip try using podman
 # Install Podman
 brew install podman
 podman machine init --cpus 2 --memory 2048 --rootful
@@ -29,25 +36,50 @@ minikube start --kubernetes-version=v1.24.1 --driver=podman
 # Optional command if you want to clear minikube
 # minikube delete --all --purge
 ```
-
-# To start the project in development mode run
+# Deploy to k8s cluster
 ```bash
-sudo docker-compose up --build -d
+# Install Dependencies
+
+## Helmfile
+# Install helmfile
+brew install helmfile
+
+# Helm diff plugin
+helm plugin install https://github.com/databus23/helm-diff
+
+# Helm secrets plugin
+helm plugin install https://github.com/jkroepke/helm-secrets
+
+## Ansible
+# Install Ansible Ansible Script
+brew install ansible
+
+# Run Ansible Script
+ansible-playbook
 ```
+
+# Enable Minikube loadbalancer
+```bash
+minikube tunnel
+```
+
+# Access the webapp
+Finally to access the webapp headover to http://django.localhost
 
 # TODO
 
 - [x] Run the application
-- [x] Take conf from env
+- [x] Take settings from env
 - [x] Dockerize the application for development
 - [x] Docker compose for development mode
 - [x] Postgres docker container for development
 - [x] Setup k8s cluster using minikube
 - [ ] Dockerize the application for prod
-- [ ] Create a basic helm chart
-- [ ] Add a deployment for the django app
-- [ ] Add a statefulset for PostgreSQL
-- [ ] Add config map and secrets for env
-- [ ] Add an nginx ingress controller
+- [x] Create a basic helm chart
+- [x] Add a deployment for the django app
+- [ ] Install postgresql chart
+- [ ] Make postgresql chart volume persistent
+- [x] Add config map and secrets for env
+- [x] Add an nginx ingress controller
 - [ ] Write ansible role for building docker image
 - [ ] Write ansible role for deploying helm chart
