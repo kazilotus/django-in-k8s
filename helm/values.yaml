@@ -11,7 +11,7 @@ database:
   password: Z6rJKisQmAf
 
 application:
-  host: django.localhost
+  host: localhost
   name: django
   replicas: 2
   maxreplicas: 3

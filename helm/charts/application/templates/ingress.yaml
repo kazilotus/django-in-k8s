@@ -4,6 +4,8 @@ kind: Ingress
 metadata:
   name: {{ .Values.ingress.name }}
   namespace: {{ .Values.ingress.namespace }}
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-issuer
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
@@ -17,7 +19,7 @@ spec:
               name: {{ .Values.application.name }}
               port:
                 number: {{ .Values.application.servicePort }}
-  # tls:
-  #   - hosts:
-  #       - {{ .Values.application.host }}
-  #     secretName: example-tls
+  tls:
+    - hosts:
+        - {{ .Values.application.host }}
+      secretName: selfsigned-tls

@@ -81,5 +81,8 @@ Finally to access the webapp headover to http://django.localhost
 - [ ] Make postgresql chart volume persistent
 - [x] Add config map and secrets for env
 - [x] Add an nginx ingress controller
+- [x] Install cert manager for self signed ssl key
+- [ ] Trust certmanager self signed ssl key
+- [ ] Encrypt helm secrets
 - [ ] Write ansible role for building docker image
 - [ ] Write ansible role for deploying helm chart
