@@ -34,3 +34,20 @@ minikube start --kubernetes-version=v1.24.1 --driver=podman
 ```bash
 sudo docker-compose up --build -d
 ```
+
+# TODO
+
+- [x] Run the application
+- [x] Take conf from env
+- [x] Dockerize the application for development
+- [x] Docker compose for development mode
+- [x] Postgres docker container for development
+- [x] Setup k8s cluster using minikube
+- [ ] Dockerize the application for prod
+- [ ] Create a basic helm chart
+- [ ] Add a deployment for the django app
+- [ ] Add a statefulset for PostgreSQL
+- [ ] Add config map and secrets for env
+- [ ] Add an nginx ingress controller
+- [ ] Write ansible role for building docker image
+- [ ] Write ansible role for deploying helm chart
