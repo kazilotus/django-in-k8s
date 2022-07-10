@@ -1,0 +1,21 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: mkcert-ca-issuer
+spec:
+  ca:
+    secretName: mkcert-ca-tls-secret
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mkcert-tls-certificate
+  namespace: django
+spec:
+  secretName: mkcert-tls-secret
+  dnsNames:
+    - localhost
+  issuerRef:
+    name: mkcert-ca-issuer
+    kind: ClusterIssuer

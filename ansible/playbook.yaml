@@ -1,0 +1,71 @@
+# - hosts: all
+#   connection: local
+#   roles:
+#     # - build
+
+- hosts: localhost
+  become: false
+  vars:
+    brew_packages:
+      - podman
+      - minikube
+      - kubectl
+      - helm
+      - helmfile
+      - mkcert
+      - nss
+    install_homebrew_if_missing: true
+    upgrade_homebrew_packages: false
+
+  pre_tasks:
+    - name: Ensuring Homebrew Is Installed
+      stat:
+        path: /opt/homebrew/bin/brew
+      register: homebrew_check
+
+    - name: Fail If Homebrew Is Not Installed and install_homebrew_if_missing Is False
+      fail:
+        msg: Homebrew is missing...Install from http://brew.sh/
+      when:
+        - not homebrew_check.stat.exists
+        - not install_homebrew_if_missing
+
+    - name: Installing Homebrew
+      shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      when:
+        - not homebrew_check.stat.exists
+        - install_homebrew_if_missing
+
+  tasks:
+    - name: Updating Homebrew
+      homebrew:
+        update_homebrew: true
+      when: homebrew_check.stat.exists
+
+    - name: Upgrading Homebrew Packages
+      homebrew:
+        upgrade_all: "{{ upgrade_homebrew_packages }}"
+      register: result
+      until: result is successful
+      when: homebrew_check.stat.exists
+
+    - name: Installing Homebrew Packages
+      homebrew:
+        path: /opt/homebrew/bin/brew
+        name: "{{ brew_packages }}"
+        state: present
+      register: result
+      until: result is successful
+      when: homebrew_check.stat.exists
+
+    # Generate and install self signed trusted tls certificates
+
+    - name: Install and generate mkcert root CA
+      ansible.builtin.command: /opt/homebrew/bin/mkcert -install
+      environment:
+        CAROOT: .
+
+    - name: Upload mkcert root CA in k8s as secret
+      ansible.builtin.shell: /opt/homebrew/bin/kubectl create secret tls mkcert-ca-tls-secret --key=rootCA-key.pem --cert=rootCA.pem -n security --dry-run=client -o yaml | kubectl apply -f -
+
+    

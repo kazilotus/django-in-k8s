@@ -5,10 +5,10 @@ environments:
 
 # Repositories
 repositories:
-- name: ingress-nginx
-  url: "https://kubernetes.github.io/ingress-nginx"
 - name: jetstack
   url: "https://charts.jetstack.io"
+- name: ingress-nginx
+  url: "https://kubernetes.github.io/ingress-nginx"
 - name: bitnami
   url: "https://charts.bitnami.com/bitnami"
 
@@ -57,4 +57,4 @@ releases:
   hooks:
     - events: ["presync"]
       command: "kubectl"
-      args: ["apply", "--validate=true", "--filename=charts/cert-manager/selfsigned-issuer.yaml"]
+      args: ["apply", "--validate=true", "--filename=charts/cert-manager/mkcert-ca-issuer.yaml"]

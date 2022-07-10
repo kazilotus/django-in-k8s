@@ -22,4 +22,4 @@ spec:
   tls:
     - hosts:
         - {{ .Values.application.host }}
-      secretName: selfsigned-tls
+      secretName: mkcert-tls-secret
