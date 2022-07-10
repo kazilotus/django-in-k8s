@@ -1,4 +1,4 @@
-# django-helm
+# django-in-k8s
 
 This project demonstrates using docker and helm to deploy a django application to a k8s cluster.
 
