@@ -8,6 +8,7 @@ ingress:
 application:
   host: {{ .Values | get "application.host" "localhost" }}
   name: {{ .Values | get "application.name" "localhost" }}
+  image: {{ .Values | get "application.image" "nginx" }}
   replicas: {{ .Values | get "application.replicas" "2" }}
   maxreplicas: {{ .Values | get "application.maxreplicas" "2" }}
   containerPort: {{ .Values | get "application.containerPort" "80" }}

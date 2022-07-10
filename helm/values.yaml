@@ -16,6 +16,7 @@ ingress:
 application:
   host: localhost
   name: django
+  image: django_todo:latest
   replicas: 2
   maxreplicas: 3
   containerPort: 80

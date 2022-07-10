@@ -1,22 +1,8 @@
-# - hosts: all
-#   connection: local
-#   roles:
-#     # - build
-
 - hosts: localhost
   connection: local
   become: false
-  vars:
-    brew_packages:
-      - podman
-      - minikube
-      - kubectl
-      - helm
-      - helmfile
-      - mkcert
-      - nss
-    install_homebrew_if_missing: true
-    upgrade_homebrew_packages: false
+  vars_files:
+    - variables.yaml
 
   pre_tasks:
     - name: Ensuring Homebrew Is Installed
@@ -97,13 +83,23 @@
       ansible.builtin.command: /opt/homebrew/bin/mkcert -install
       environment:
         CAROOT: .
+      args:
+        chdir: ../helm/charts/cert-manager/
 
     - name: Upload mkcert root CA in k8s as secret
       ansible.builtin.shell: /opt/homebrew/bin/kubectl create secret tls mkcert-ca-tls-secret --key=rootCA-key.pem --cert=rootCA.pem -n security --dry-run=client -o yaml | kubectl apply -f -
+      args:
+        chdir: ../helm/charts/cert-manager/
 
-    # Build docker image
+    # Build container image using podman build
+
+    - name: Build container image using podman
+      ansible.builtin.shell: "/opt/homebrew/bin/podman build --format docker --no-cache -f Dockerfile.prod -t {{ image }} ."
+      args:
+        chdir: ../app/
 
     # Deploy helmfile
+
     - name: Deploy all helmcharts
       ansible.builtin.command: /opt/homebrew/bin/helmfile apply
       args:
