@@ -4,6 +4,7 @@
 #     # - build
 
 - hosts: localhost
+  connection: local
   become: false
   vars:
     brew_packages:
@@ -49,6 +50,8 @@
       until: result is successful
       when: homebrew_check.stat.exists
 
+    # Install all dependency packages
+
     - name: Installing Homebrew Packages
       homebrew:
         path: /opt/homebrew/bin/brew
@@ -57,6 +60,36 @@
       register: result
       until: result is successful
       when: homebrew_check.stat.exists
+
+    # Setup podman
+
+    - name: Initiate a podman machine with 2 CPU and 2GB RAM
+      ansible.builtin.command: /opt/homebrew/bin/podman machine init --cpus 2 --memory 2048 --rootful
+      register: podman_init_output
+      failed_when: 
+        - podman_init_output.stderr != ''
+        - '"already exists" not in podman_init_output.stderr'
+
+    - name: Start Podman Machine
+      ansible.builtin.command: /opt/homebrew/bin/podman machine start
+      register: podman_start_output
+      failed_when: 
+        - podman_start_output.stderr != ''
+        - '"already running" not in podman_start_output.stderr'
+
+    # Minikube
+
+    - name: Start Minikube
+      ansible.builtin.command: /opt/homebrew/bin/minikube start --kubernetes-version=v1.24.1 --driver=podman
+
+    # Install plugins
+
+    - name: Install helm-diff plugin for helmfile
+      ansible.builtin.command: /opt/homebrew/bin/helm plugin install https://github.com/databus23/helm-diff
+      register: helm_diff_output
+      failed_when: 
+        - helm_diff_output.stderr != ''
+        - '"already exists" not in helm_diff_output.stderr'
 
     # Generate and install self signed trusted tls certificates
 
@@ -68,4 +101,14 @@
     - name: Upload mkcert root CA in k8s as secret
       ansible.builtin.shell: /opt/homebrew/bin/kubectl create secret tls mkcert-ca-tls-secret --key=rootCA-key.pem --cert=rootCA.pem -n security --dry-run=client -o yaml | kubectl apply -f -
 
+    # Build docker image
+
+    # Deploy helmfile
+    - name: Deploy all helmcharts
+      ansible.builtin.command: /opt/homebrew/bin/helmfile apply
+      args:
+        chdir: ../helm/
+      register: helmfile
     
+    - name: Debug helmfile apply command
+      debug: msg='{{helmfile.stdout_lines}}'

@@ -14,6 +14,9 @@ Tools used in this project
 - kubernetes
 
 # Start the project in development mode
+
+Start docker-desktop on your computer then run the following command in your terminal
+
 ```bash
 sudo docker-compose up --build -d
 ```
@@ -46,9 +49,6 @@ brew install helmfile
 
 # Helm diff plugin
 helm plugin install https://github.com/databus23/helm-diff
-
-# Helm secrets plugin
-helm plugin install https://github.com/jkroepke/helm-secrets
 
 ## Ansible
 # Install Ansible Ansible Script
@@ -84,5 +84,6 @@ Finally to access the webapp headover to https://localhost
 - [x] Install cert manager for self signed ssl key
 - [x] Trust certmanager self signed ssl key
 - [ ] Encrypt helm secrets
-- [ ] Write ansible role for building docker image
-- [ ] Write ansible role for deploying helm chart
+- [x] Write ansible task for installing all dependencies
+- [ ] Write ansible task for building docker image
+- [x] Write ansible task for deploying helm chart
