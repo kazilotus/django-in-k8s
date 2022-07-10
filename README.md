@@ -4,7 +4,8 @@ This project demonstrates using docker and helm to deploy a django application t
 
 The django project being used is https://github.com/shacker/gtd which is a full implemtation of https://github.com/shacker/django-todo application.
 
-Tools used in this project
+# Tools
+## Tools used in this project
 - ansible - build and deploy helm chart to k8s cluster
 - docker - container engine
 - helm - package k8s resources
@@ -13,15 +14,8 @@ Tools used in this project
 - minikube - setup a basic k8s cluster
 - kubernetes - container orchestration
 
-# Start the project in development mode
-
-Start docker-desktop on your computer then run the following command in your terminal
-
-```bash
-sudo docker-compose up --build -d
-```
-
-# Install Homebrew and Ansible
+# Usage
+## Install Homebrew and Ansible
 ```bash
 # Install Homebrew
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -29,28 +23,36 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/in
 # Install Ansible
 brew install ansible
 ```
-# Run Ansible playbook to setup and deploy app into k8s cluster
+## Run Ansible playbook to setup and deploy app into k8s cluster
 ```bash
 # Run Ansible Script
 cd ansible
 ansible-playbook playbook.yaml
 ```
 
-# Enable Minikube loadbalancer
+## Enable Minikube loadbalancer
 ```bash
 minikube tunnel
 ```
 
-# Access the webapp
+## Access the webapp
 Finally to access the webapp; headover to https://localhost
 
-# Cleanup
+## Cleanup
 ```bash
 # Clear minikube
 minikube delete --all --purge
 ```
 
-# TODO
+# Development
+
+Start docker-desktop on your computer then run the following command in your terminal
+
+```bash
+sudo docker-compose up --build -d
+```
+
+# Todo
 
 - [x] Run the application
 - [x] Take settings from env
