@@ -5,12 +5,12 @@ This project demonstrates using docker and helm to deploy a django application t
 The django project being used is https://github.com/shacker/gtd which is a full implemtation of https://github.com/shacker/django-todo application.
 
 Tools used in this project
+- ansible - build and deploy helm chart to k8s cluster
 - docker - container engine
 - helm - package k8s resources
 - helmfile - install multiple charts at once
 - podman - to install minikube in M1 Apple Chip Macbook
 - minikube - setup a basic k8s cluster
-- ansible - build and deploy helm chart to k8s cluster
 - kubernetes
 
 # Start the project in development mode
@@ -64,7 +64,7 @@ minikube tunnel
 ```
 
 # Access the webapp
-Finally to access the webapp headover to http://django.localhost
+Finally to access the webapp headover to https://localhost
 
 # TODO
 
@@ -77,8 +77,8 @@ Finally to access the webapp headover to http://django.localhost
 - [ ] Dockerize the application for prod
 - [x] Create a basic helm chart
 - [x] Add a deployment for the django app
-- [ ] Install postgresql chart
-- [ ] Make postgresql chart volume persistent
+- [x] Install postgresql chart
+- [x] Make postgresql chart volume persistent
 - [x] Add config map and secrets for env
 - [x] Add an nginx ingress controller
 - [x] Install cert manager for self signed ssl key

@@ -1,14 +1,17 @@
 project: django
 
+database:
+  name: postgresql
+  username: bukL7EukgGA
+  password: Z6rJKisQmAf
+  port: 5432
+  settings:
+    size: 2Gi
+
 ingress:
   name: ingress-nginx
   namespace: django
   className: nginx
-
-database:
-  name: django
-  username: bukL7EukgGA
-  password: Z6rJKisQmAf
 
 application:
   host: localhost
@@ -36,9 +39,9 @@ application:
     DEBUG: "\"off\""
 
     DATABASE_ENGINE: django.db.backends.postgresql
-    DATABASE_HOST: postgres
+    DATABASE_HOST: postgresql.database.svc.cluster.local
     DATABASE_PORT: "\"5432\""
-    DATABASE_NAME: db
+    DATABASE_NAME: postgresql
 
   secret_values:
     SECRET_KEY: "4&yf5g+pd3d=8(5ot!+c)00n_gsma^6&xnxdwb#7-w+p%w863^"
