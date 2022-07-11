@@ -4,7 +4,10 @@ This project demonstrates using docker and helm to deploy a django application t
 
 The django project being used is https://github.com/shacker/gtd which is a full implemtation of https://github.com/shacker/django-todo application.
 
+<img width="1278" alt="django-todo" src="https://user-images.githubusercontent.com/11974463/178183956-a2f5733b-e642-484c-94ee-83b3a1e67943.png">
+
 # Tools
+
 ## Tools used in this project
 - ansible - build and deploy helm chart to k8s cluster
 - docker - container engine
