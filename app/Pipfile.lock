@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e3c4e17485d4db894fcab6b8ae1d0cc24881838035e5a1179790deb17c15ed8c"
+            "sha256": "3a87ad444c033fc53a8d66b2da96e054868771576d555a35b90e25ff654c859a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -70,14 +70,6 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==13.15.0"
-        },
-        "gunicorn": {
-            "hashes": [
-                "sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e",
-                "sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8"
-            ],
-            "index": "pypi",
-            "version": "==20.1.0"
         },
         "psycopg2-binary": {
             "hashes": [
@@ -180,6 +172,14 @@
             "markers": "python_version >= '3.5'",
             "version": "==0.4.2"
         },
+        "supervisor": {
+            "hashes": [
+                "sha256:40dc582ce1eec631c3df79420b187a6da276bbd68a4ec0a8f1f123ea616b97a2",
+                "sha256:bbae57abf74e078fe0ecc9f30068b6da41b840546e233ef1e659a12e4c875af6"
+            ],
+            "index": "pypi",
+            "version": "==4.2.4"
+        },
         "titlecase": {
             "hashes": [
                 "sha256:037be1a542634d5582735c949f3b247bfc878a4f21c76957ae42167a398c9dce",
@@ -196,6 +196,13 @@
             "markers": "python_version >= '3.5'",
             "version": "==1.3.4"
         },
+        "uwsgi": {
+            "hashes": [
+                "sha256:88ab9867d8973d8ae84719cf233b7dafc54326fcaec89683c3f9f77c002cdff9"
+            ],
+            "index": "pypi",
+            "version": "==2.0.20"
+        },
         "webencodings": {
             "hashes": [
                 "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78",
@@ -207,11 +214,11 @@
     "develop": {
         "astroid": {
             "hashes": [
-                "sha256:4f933d0bf5e408b03a6feb5d23793740c27e07340605f236496cd6ce552043d6",
-                "sha256:ba33a82a9a9c06a5ceed98180c5aab16e29c285b828d94696bf32d6015ea82a9"
+                "sha256:86b0a340a512c65abf4368b80252754cda17c02cdbbd3f587dddf98112233e7b",
+                "sha256:bb24615c77f4837c707669d16907331374ae8a964650a66999da3f5ca68dc946"
             ],
             "markers": "python_full_version >= '3.6.2'",
-            "version": "==2.11.6"
+            "version": "==2.11.7"
         },
         "attrs": {
             "hashes": [

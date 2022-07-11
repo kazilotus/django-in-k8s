@@ -17,6 +17,7 @@ releases:
 
 - name: cert-manager
   namespace: security
+  createNamespace: true
   labels:
     tier: controller
   chart: jetstack/cert-manager
@@ -34,6 +35,7 @@ releases:
 
 - name: postgresql
   namespace: database
+  createNamespace: true
   labels:
     tier: database
   chart: bitnami/postgresql
@@ -43,6 +45,7 @@ releases:
 
 - name: application
   namespace: django
+  createNamespace: true
   labels:
     tier: application
   chart: ./charts/{{`{{ .Release.Name }}`}}
@@ -55,6 +58,11 @@ releases:
     - security/cert-manager
     - database/postgresql
   hooks:
+    # Install mkcert CA cert issuer for cert-manager
     - events: ["presync"]
       command: "kubectl"
       args: ["apply", "--validate=true", "--filename=charts/cert-manager/mkcert-ca-issuer.yaml"]
+    # Fix https://github.com/kubernetes/ingress-nginx/issues/5401#issuecomment-662424306
+    - events: ["presync"]
+      command: "kubectl"
+      args: ["delete", "-A", "ValidatingWebhookConfiguration", "ingress-nginx-admission"]

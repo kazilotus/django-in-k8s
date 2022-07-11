@@ -49,8 +49,8 @@
 
     # Setup podman
 
-    - name: Initiate a podman machine with 2 CPU and 2GB RAM
-      ansible.builtin.command: /opt/homebrew/bin/podman machine init --cpus 2 --memory 2048 --rootful
+    - name: Initiate a podman machine with 4 CPU and 4GB RAM
+      ansible.builtin.command: /opt/homebrew/bin/podman machine init --cpus 4 --memory 4096 --rootful
       register: podman_init_output
       failed_when: 
         - podman_init_output.stderr != ''
@@ -60,6 +60,7 @@
       ansible.builtin.command: /opt/homebrew/bin/podman machine start
       register: podman_start_output
       failed_when: 
+        - podman_start_output.rc > 0
         - podman_start_output.stderr != ''
         - '"already running" not in podman_start_output.stderr'
 
@@ -87,16 +88,27 @@
         chdir: ../helm/charts/cert-manager/
 
     - name: Upload mkcert root CA in k8s as secret
-      ansible.builtin.shell: /opt/homebrew/bin/kubectl create secret tls mkcert-ca-tls-secret --key=rootCA-key.pem --cert=rootCA.pem -n security --dry-run=client -o yaml | kubectl apply -f -
+      ansible.builtin.shell: |
+        /opt/homebrew/bin/kubectl create namespace $NS --dry-run=client -o yaml | kubectl apply -f -
+        /opt/homebrew/bin/kubectl create secret tls mkcert-ca-tls-secret --key=rootCA-key.pem --cert=rootCA.pem -n $NS --dry-run=client -o yaml | kubectl apply -f -
       args:
         chdir: ../helm/charts/cert-manager/
+      environment:
+        NS: security
 
-    # Build container image using podman build
+    # Build container image using minikube docker daemon
 
-    - name: Build container image using podman
-      ansible.builtin.shell: "/opt/homebrew/bin/podman build --format docker --no-cache -f Dockerfile.prod -t {{ image }} ."
+    - name: Build container image using minikube docker daemon
+      ansible.builtin.shell: |
+        eval $(minikube docker-env)
+        docker build --no-cache -f Dockerfile.prod -t {{ image }} .
+        eval $(minikube docker-env -u)
       args:
         chdir: ../app/
+      register: build
+    
+    - name: Debug build
+      debug: msg='{{build.stdout_lines}}'
 
     # Deploy helmfile
 

@@ -4,6 +4,7 @@ import os
 from django.contrib.messages import constants as message_constants
 
 DEBUG = False
+ALLOWED_HOSTS = '*'
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -65,7 +66,7 @@ INSTALLED_APPS = (
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "project", "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Uploaded media
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

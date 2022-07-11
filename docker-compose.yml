@@ -14,11 +14,17 @@ services:
       - ./cache/postgresql:/var/lib/postgresql
   backend:
     environment:
-      DJANGO_MANAGEPY_MAKEMIGRATION: 1
-      DJANGO_MANAGEPY_MIGRATE: 1
-      DJANGO_MANAGEPY_COLLECTSTATIC: 1
-    env_file:
-      - ./app/.env.dev
+      INIT: true
+
+      DEBUG: on
+      SECRET_KEY: default
+
+      DATABASE_NAME: db
+      DATABASE_ENGINE: django.db.backends.postgresql
+      DATABASE_USERNAME: user
+      DATABASE_PASSWORD: password
+      DATABASE_PORT: 5432
+      DATABASE_HOST: db
     build:
       context: ./app
       dockerfile: ./Dockerfile.dev

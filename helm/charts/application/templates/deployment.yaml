@@ -23,6 +23,17 @@ spec:
           labelSelector:
             matchLabels:
               module: {{ .Values.application.name }}
+      initContainers:
+      - name: {{ .Values.application.name }}-init
+        image: {{ .Values.application.image }}
+        args:
+          - init
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.application.name }}-env-configmap
+        - secretRef:
+            name: {{ .Values.application.name }}-env-secrets
       containers:
       - name: {{ .Values.application.name }}
         image: {{ .Values.application.image }}
@@ -47,10 +58,10 @@ spec:
             path: {{ .Values.application.health_check_url  }}
           initialDelaySeconds: {{ .Values.application.readinessProbe_initialDelaySeconds }}
           periodSeconds: {{ .Values.application.readinessProbe_periodSeconds }}
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         envFrom:
         - configMapRef:
-            name: {{ .name }}-env-configmap
+            name: {{ .Values.application.name }}-env-configmap
         - secretRef:
-            name: {{ .name }}-env-secrets
+            name: {{ .Values.application.name }}-env-secrets
       terminationGracePeriodSeconds: {{ .Values.application.terminationGracePeriodSeconds }}

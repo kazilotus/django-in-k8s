@@ -9,4 +9,4 @@ brew_packages:
   - nss
 install_homebrew_if_missing: false
 upgrade_homebrew_packages: false
-image: django_todo:latest
+image: django:local

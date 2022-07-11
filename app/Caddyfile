@@ -1,0 +1,24 @@
+{
+    debug
+}
+
+:80 {
+    root /static/* /app/
+    file_server
+    @css {
+        path_regexp .css
+    }
+    @js {
+        path_regexp .js
+    }
+    @json {
+        path_regexp .json
+    }
+    header @css Content-Type text/css
+    header @js Content-Type text/js
+    header @json Content-Type application/json
+    @notStatic { 
+        not path /static/*
+    }
+    reverse_proxy @notStatic localhost:9000
+}

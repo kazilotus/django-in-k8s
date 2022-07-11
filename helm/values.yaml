@@ -16,7 +16,7 @@ ingress:
 application:
   host: localhost
   name: django
-  image: django_todo:latest
+  image: django:local
   replicas: 2
   maxreplicas: 3
   containerPort: 80
@@ -27,16 +27,12 @@ application:
   limit_memory: 400Mi
   limit_cpu: 800m
   livenessProbe_initialDelaySeconds: 5
-  livenessProbe_periodSeconds: 30
+  livenessProbe_periodSeconds: 60
   readinessProbe_initialDelaySeconds: 5
-  readinessProbe_periodSeconds: 30
-  terminationGracePeriodSeconds: 30
+  readinessProbe_periodSeconds: 5
+  terminationGracePeriodSeconds: 60
   health_check_url: /
   config_map_values:
-    DJANGO_MANAGEPY_MAKEMIGRATION: "\"1\""
-    DJANGO_MANAGEPY_MIGRATE: "\"1\""
-    DJANGO_MANAGEPY_COLLECTSTATIC: "\"1\""
-  
     DEBUG: "\"off\""
 
     DATABASE_ENGINE: django.db.backends.postgresql

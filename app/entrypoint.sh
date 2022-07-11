@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-if [ "$1" = 'runserver' ]; then
+if [ "$1" = 'init' ] || [ "$INIT" = true ]; then
 
     until psql postgres://$DATABASE_USERNAME:$DATABASE_PASSWORD@$DATABASE_HOST/$DATABASE_NAME -c '\l'; do
         >&2 echo "Postgres is unavailable - sleeping"
@@ -10,21 +10,23 @@ if [ "$1" = 'runserver' ]; then
 
     >&2 echo "Postgres is up - continuing"
 
-    pipenv run env
+    pipenv run python manage.py makemigrations
+    pipenv run python manage.py migrate --noinput
+    pipenv run python manage.py collectstatic --noinput
 
-    if [ "$DJANGO_MANAGEPY_MAKEMIGRATION" = 1 ]; then
-        pipenv run ./manage.py makemigrations
-    fi
+fi
 
-    if [ "$DJANGO_MANAGEPY_MIGRATE" = 1 ]; then
-        pipenv run ./manage.py migrate --noinput
-    fi
+if [ "$1" = 'init' ]; then return
+elif [ "$1" = 'runserver' ]; then
 
-    if [ "$DJANGO_MANAGEPY_COLLECTSTATIC" = 1 ]; then
-        pipenv run ./manage.py collectstatic --noinput
-    fi
+    exec pipenv run python manage.py runserver 0.0.0.0:80
 
-    exec pipenv run ./manage.py runserver 0.0.0.0:80
+elif [ "$1" = 'supervisord' ]; then
+
+    exec pipenv run supervisord -n -c supervisord.conf
+
 else
+
     exec "$@"
+    
 fi

@@ -14,6 +14,11 @@ The django project being used is https://github.com/shacker/gtd which is a full 
 - minikube - setup a basic k8s cluster
 - kubernetes - container orchestration
 
+## Tools used for dockerizing the django app
+- uWSGI
+- Caddy web server
+- Supervisord
+
 # Usage
 ## Install Homebrew and Ansible
 ```bash
@@ -27,7 +32,7 @@ brew install ansible
 ```bash
 # Run Ansible Script
 cd ansible
-ansible-playbook playbook.yaml
+ansible-playbook playbook.yaml | tee output.log
 ```
 
 ## Enable Minikube loadbalancer
@@ -42,6 +47,10 @@ Finally to access the webapp; headover to https://localhost
 ```bash
 # Clear minikube
 minikube delete --all --purge
+# Stop Podman Machine
+podman machine stop podman-machine-default
+# Remove Podman Machine
+podman machine rm podman-machine-default
 ```
 
 # Development
@@ -60,7 +69,7 @@ sudo docker-compose up --build -d
 - [x] Docker compose for development mode
 - [x] Postgres docker container for development
 - [x] Setup k8s cluster using minikube
-- [ ] Dockerize the application for prod
+- [x] Dockerize the application for prod
 - [x] Create a basic helm chart
 - [x] Add a deployment for the django app
 - [x] Install postgresql chart
@@ -71,5 +80,9 @@ sudo docker-compose up --build -d
 - [ ] Encrypt helm secrets
 - [x] Write ansible task for generating trusted selfsigned CA cert
 - [x] Write ansible task for installing all dependencies
-- [ ] Write ansible task for building docker image
+- [x] Write ansible task for building docker image
 - [x] Write ansible task for deploying helm chart
+
+# Notes
+
+- Instead of building the docker image in host system, the image is being built inside podman using minikube docker daemon. Although this significantly increases the build time, its a quick fix for avoiding M1/Arm architecture related issues.
