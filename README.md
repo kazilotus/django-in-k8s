@@ -4,11 +4,10 @@ This project demonstrates using docker and helm to deploy a django application t
 
 The django project being used is https://github.com/shacker/gtd which is a full implemtation of https://github.com/shacker/django-todo application.
 
-<img width="1278" alt="django-todo" src="https://user-images.githubusercontent.com/11974463/178183956-a2f5733b-e642-484c-94ee-83b3a1e67943.png">
+<img width="500" alt="django-todo" src="https://user-images.githubusercontent.com/11974463/178183956-a2f5733b-e642-484c-94ee-83b3a1e67943.png">
 
 # Tools
 
-## Tools used in this project
 - ansible - build and deploy helm chart to k8s cluster
 - docker - container engine
 - helm - package k8s resources
@@ -17,10 +16,18 @@ The django project being used is https://github.com/shacker/gtd which is a full 
 - minikube - setup a basic k8s cluster
 - kubernetes - container orchestration
 
-## Tools used for dockerizing the django app
-- uWSGI
-- Caddy web server
-- Supervisord
+- uWSGI - python server
+- Caddy - web server
+- Supervisord - to run uWSGI and Caddy
+
+# Requirement
+
+### Environment (Tested)
+- Apple M1 
+- MacOS Monterey
+
+### Tools (Required)
+- Docker Desktop https://docs.docker.com/desktop/mac/install/
 
 # Usage
 ## Install Homebrew and Ansible
@@ -89,3 +96,6 @@ sudo docker-compose up --build -d
 # Notes
 
 - Instead of building the docker image in host system, the image is being built inside podman using minikube docker daemon. Although this significantly increases the build time, its a quick fix for avoiding M1/Arm architecture related issues.
+- Wanted to implement encryption of secrets in helm values, but thought maybe its not too important right now. implemented them as b64 encoded k8s secrets
+for now.
+- Automation of the steps are implemented as Ansible Tasks rather than roles for simplicities sake. Will change them to roles later on.
